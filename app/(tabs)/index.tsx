@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Platform, SafeAreaView, StatusBar } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import {
+  Alert,
+  Button,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
+
 import { useNotification } from '@/context/NotificationContext';
 // import DOMCoolCode from '@/components/DOMCoolCode';
 import * as Updates from 'expo-updates';
@@ -14,7 +21,7 @@ export default function HomeScreen() {
   const [dummyState, setDummyState] = useState(0);
 
   if (error) {
-    return <ThemedText>Error: {error.message}</ThemedText>;
+    return <Text>Error: {error.message}</Text>;
   }
 
   useEffect(() => {
@@ -51,7 +58,7 @@ export default function HomeScreen() {
     : 'This app is running an update';
 
   return (
-    <ThemedView
+    <View
       style={{
         flex: 1,
         padding: 10,
@@ -59,8 +66,8 @@ export default function HomeScreen() {
       }}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <ThemedText type="subtitle">Updates Demo 5</ThemedText>
-        <ThemedText>{runTypeMessage}</ThemedText>
+        <Text>Updates Demo 5</Text>
+        <Text>{runTypeMessage}</Text>
         <Button
           onPress={() => Updates.checkForUpdateAsync()}
           title="Check manually for updates"
@@ -71,16 +78,14 @@ export default function HomeScreen() {
             title="Download and run update"
           />
         ) : null}
-        <ThemedText type="subtitle" style={{ color: 'red' }}>
-          Your push token:
-        </ThemedText>
-        <ThemedText>{expoPushToken}</ThemedText>
-        <ThemedText type="subtitle">Latest notification:</ThemedText>
-        <ThemedText>{notification?.request.content.title}</ThemedText>
-        <ThemedText>
+        <Text style={{ color: 'red' }}>Your push token:</Text>
+        <Text>{expoPushToken}</Text>
+        <Text>Latest notification:</Text>
+        <Text>{notification?.request.content.title}</Text>
+        <Text>
           {JSON.stringify(notification?.request.content.data, null, 2)}
-        </ThemedText>
+        </Text>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
