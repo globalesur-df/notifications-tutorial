@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -60,8 +60,40 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+function useNotificationObserver() {
+  useEffect(() => {
+    let isMounted = true;
+
+    function redirect(notification: Notifications.Notification) {
+      const url = notification.request.content.data?.url;
+      if (url) {
+        router.push(url);
+      }
+    }
+
+    Notifications.getLastNotificationResponseAsync().then((response) => {
+      if (!isMounted || !response?.notification) {
+        return;
+      }
+      redirect(response?.notification);
+    });
+
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        redirect(response.notification);
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      subscription.remove();
+    };
+  }, []);
+}
+
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  useNotificationObserver();
 
   return (
     <NotificationProvider>
